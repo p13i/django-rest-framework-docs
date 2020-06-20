@@ -1,6 +1,6 @@
 from importlib import import_module
 from django.conf import settings
-from django.urls import RegexURLResolver, RegexURLPattern
+from django.urls import URLResolver, URLPattern
 from django.utils.module_loading import import_string
 from rest_framework.views import APIView
 from rest_framework_docs.api_endpoint import ApiEndpoint
@@ -23,10 +23,10 @@ class ApiDocumentation(object):
 
     def get_all_view_names(self, urlpatterns, parent_regex=''):
         for pattern in urlpatterns:
-            if isinstance(pattern, RegexURLResolver):
+            if isinstance(pattern, URLResolver):
                 regex = '' if pattern._regex == "^" else pattern._regex
                 self.get_all_view_names(urlpatterns=pattern.url_patterns, parent_regex=parent_regex + regex)
-            elif isinstance(pattern, RegexURLPattern) and self._is_drf_view(pattern) and not self._is_format_endpoint(pattern):
+            elif isinstance(pattern, URLPattern) and self._is_drf_view(pattern) and not self._is_format_endpoint(pattern):
                 api_endpoint = ApiEndpoint(pattern, parent_regex, self.drf_router)
                 self.endpoints.append(api_endpoint)
 
